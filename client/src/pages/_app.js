@@ -18,6 +18,9 @@ function App(props) {
           <meta name="author" content="BroCorp" />
           <meta name="keywords" content="Blender, render, distributed, free, online, distributed" />
           <meta name="description" content="Render your blender projects in realtime with our distributed cluster." />
+          <meta name="og:description" content="Render your blender projects in realtime with our distributed cluster." />
+          <meta name="og:title" content="BroRender - Free Distributed Render by BroCorp" />
+          <meta name="og:image" content="https://brorender.site/img/logo.png" />
       </Helmet>
       <Switch>
         <Route path="/" component={IndexPage} />
