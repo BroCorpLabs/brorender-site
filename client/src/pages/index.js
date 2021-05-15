@@ -26,8 +26,11 @@ function CreateBCid(cookies) {
 function IndexPage(props) {
 
   useEffect(() => {
-    var myDropzone = new window.Dropzone("form#blendDropzone", { url: "https://"+ process.env.REACT_APP_RENDER_SERVER_IP + process.env.REACT_APP_RENDER_SERVER_ROUTE});
-
+    var Dropzone = window.Dropzone;
+    if (Dropzone.instances.length > 0) Dropzone.instances.forEach(dz => dz.destroy())
+    
+    var myDropzone = new Dropzone("form#blendDropzone", { url: "https://"+ process.env.REACT_APP_RENDER_SERVER_IP + process.env.REACT_APP_RENDER_SERVER_ROUTE});
+    
     myDropzone.options.blendDropzone = {
       init: function() {
         myDropzone.on("addedfile", function(file) { 
@@ -57,9 +60,14 @@ function IndexPage(props) {
         bg="white"
         variant="light"
         expand="md"
-        logo="https://uploads.divjoy.com/logo.svg"
+        logo="./img/logo.png"
       />
-      <div style={{border:"5px grey dashed",borderRadius:"10px",marginLeft:"auto", marginRight:"auto", width:"80vw",backgroundImage: "url(img/dragdrop-header.gif)",backgroundSize: "80%", backgroundPosition: "center"}}>
+      <div style={{border:"5px grey dashed",
+        borderRadius:"10px",marginLeft:"auto", marginRight:"auto", 
+        marginTop: "2em",
+        width:"80vw",backgroundImage: "url(img/dragdrop-header.gif)",
+          backgroundSize: "80%", backgroundPosition: "center",
+          minHeight: '75vh'}}>
       <form id="blendDropzone">
       <HeroSection
         bg="white"
@@ -102,7 +110,7 @@ function IndexPage(props) {
         bgImageOpacity={1}
         description="A short description of what you do here"
         copyright="© 2020 Company"
-        logo="https://uploads.divjoy.com/logo.svg"
+        logo="./img/logo.png"
       />
     </>
   );

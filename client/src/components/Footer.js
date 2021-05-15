@@ -33,7 +33,7 @@ function Footer(props) {
               Blog
             </a>
           </div>
-          <div className="social right">
+          {/* <div className="social right">
             <a
               href="https://twitter.com/divjoy"
               target="_blank"
@@ -62,7 +62,7 @@ function Footer(props) {
               </span>
             </a>
           </div>
-          <div className="copyright left">{props.copyright}</div>
+          <div className="copyright left">{props.copyright}</div> */}
         </div>
       </Container>
     </Section>

@@ -32,7 +32,7 @@ function NavbarCustom(props) {
               <Nav.Link active={false}>About</Nav.Link>
             </LinkContainer>
 
-            <LinkContainer to="/pricing">
+            {/* <LinkContainer to="/pricing">
               <Nav.Link active={false}>Pricing</Nav.Link>
             </LinkContainer>
 
@@ -70,14 +70,14 @@ function NavbarCustom(props) {
                   </NavDropdown.Item>
                 </LinkContainer>
               </NavDropdown>
-            )}
+            )} */}
           </Nav>
 
-          {!auth.user && (
+          {/* {!auth.user && (
             <LinkContainer to="/auth/signup">
               <Button variant="primary">Sign Up</Button>
             </LinkContainer>
-          )}
+          )} */}
         </Navbar.Collapse>
       </Container>
     </Navbar>
