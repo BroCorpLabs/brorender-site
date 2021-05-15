@@ -10,9 +10,9 @@ function App(props) {
   return (
     <Router>
       <Switch>
-        <Route exact path="/" component={IndexPage} />
+        <Route path="/" component={IndexPage} />
 
-        <Route exact path="/dash" component={DashPage} />
+        <Route path="/dash" component={DashPage} />
 
         <Route component={NotFoundPage} />
       </Switch>
