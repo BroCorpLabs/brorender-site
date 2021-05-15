@@ -23,7 +23,7 @@ export const history = createBrowserHistory();
 // Includes custom history object and component for auto-scrolling to top
 export function Router({ children }) {
   return (
-    <RouterOriginal history={history} basename={'https://brocorp.site/brorender-site/'}>
+    <RouterOriginal history={history}>
       <ScrollToTop />
       {children}
     </RouterOriginal>
