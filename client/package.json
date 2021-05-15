@@ -2,6 +2,7 @@
   "name": "my-divjoy-project",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/brorender-site/",
   "keywords": [
     "divjoy"
   ],
