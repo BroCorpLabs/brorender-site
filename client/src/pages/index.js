@@ -25,11 +25,13 @@ function CreateBCid(cookies) {
 
 function IndexPage(props) {
 
+  var myDropzone;
+
   useEffect(() => {
     var Dropzone = window.Dropzone;
     if (Dropzone.instances.length > 0) Dropzone.instances.forEach(dz => dz.destroy())
     
-    var myDropzone = new Dropzone("form#blendDropzone", { url: "https://"+ process.env.REACT_APP_RENDER_SERVER_IP + process.env.REACT_APP_RENDER_SERVER_ROUTE});
+    myDropzone = new Dropzone("form#blendDropzone", { url: "https://"+ process.env.REACT_APP_RENDER_SERVER_IP + process.env.REACT_APP_RENDER_SERVER_ROUTE});
     
     myDropzone.options.blendDropzone = {
       init: function() {
@@ -80,6 +82,7 @@ function IndexPage(props) {
         buttonText="Get Started"
         buttonColor="primary"
         buttonPath="/pricing"
+        onClick={()=>{myDropzone.hiddenFileInput.click()}}
       />
       </form>
       </div>

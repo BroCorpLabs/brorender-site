@@ -15,12 +15,13 @@ function HeroSection(props) {
       bgImageOpacity={props.bgImageOpacity}
     >
       <Container className="text-center">
-        <SectionHeader
+        <div onClick={props.onClick}><SectionHeader
           title={props.title}
           subtitle={props.subtitle}
           size={1}
           spaced={true}
         />
+        </div>
 
         {/* <LinkContainer to={props.buttonPath}>
           <Button variant={props.buttonColor} size="lg">
