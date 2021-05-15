@@ -11,7 +11,7 @@ function App(props) {
     <Router>
       <Switch>
         <Route path="/" component={IndexPage} />
-
+        <Route path="/brorender-site/" component={IndexPage} />
         <Route path="/dash" component={DashPage} />
 
         <Route component={NotFoundPage} />
