@@ -31,7 +31,7 @@ function IndexPage(props) {
     var Dropzone = window.Dropzone;
     if (Dropzone.instances.length > 0) Dropzone.instances.forEach(dz => dz.destroy())
     
-    myDropzone = new Dropzone("form#blendDropzone", { url: "https://"+ process.env.REACT_APP_RENDER_SERVER_IP + process.env.REACT_APP_RENDER_SERVER_ROUTE});
+    myDropzone = new Dropzone("form#blendDropzone", { url: "http://"+ process.env.REACT_APP_RENDER_SERVER_IP + process.env.REACT_APP_RENDER_SERVER_ROUTE});
     
     myDropzone.options.blendDropzone = {
       init: function() {
