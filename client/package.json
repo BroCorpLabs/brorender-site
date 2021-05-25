@@ -27,7 +27,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "deploy": "react-scripts build && rm -r ./../docs/* && cp -R ./build/ ./../docs/ && cp ./../CNAME ./../docs/",
+    "deploy": "react-scripts build && rm -r ./../docs/* && cp -R ./build/* ./../docs/ && cp ./../CNAME ./../docs/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
