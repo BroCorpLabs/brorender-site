@@ -36,7 +36,7 @@ function IndexPage(props) {
       Dropzone.instances.forEach((dz) => dz.destroy());
 
     myDropzone = new Dropzone("form#blendDropzone", {
-      url: "http://" + serverIp + uploadEndpoint,
+      url: "https://" + serverIp + uploadEndpoint,
     });
 
     myDropzone.options.blendDropzone = {
