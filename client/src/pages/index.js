@@ -7,7 +7,7 @@ import HeroSection from "./../components/HeroSection";
 import TestimonialsSection from "./../components/TestimonialsSection";
 import Footer from "./../components/Footer";
 
-const serverIp = process.env.REACT_APP_RENDER_SERVER_IP || "15.207.161.3:5000";
+const serverIp = process.env.REACT_APP_RENDER_SERVER_IP || "brorender.site/api";
 const uploadEndpoint =
   process.env.REACT_APP_RENDER_SERVER_ROUTE || "/uploadBlend";
 
