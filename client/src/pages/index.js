@@ -27,25 +27,19 @@ function CreateBCid(cookies) {
   return newBCid;
 }
 
-function StartPollingForDownload(setDownloadLink){
+function StartPollingForDownload(urlToPoll, setWaitingForDownload){
   setTimeout(() => {
-
-    // make get request
-    // check if file exists
-    // if exists set
-    // else retry
-    httpGetAsync("http://www.reddit.com", (response)=> {
+    httpGetAsync(urlToPoll, (response)=> {
       if(response)
       {
-        console.log("response looks like: " + response);
-        var i = "$DYNAMICURLHERE$" // probably need to reuse the video url we polled here
-        setDownloadLink("http://brorender:brocorpbrocorpbrocorp@15.207.161.3/zips/"+i+".zip");
+        // case: done polling for zip and its present
+        setWaitingForDownload(false);
       } else {
-        StartPollingForDownload(setDownloadLink);
+        // case: zip is not present, poll again
+        StartPollingForDownload(urlToPoll, setWaitingForDownload);
       }
     });
-    
-  }, 2000);
+  }, 10000); // 10 second gap between polls, async
 }
 
 async function httpGetAsync(theUrl, callback)
@@ -77,8 +71,6 @@ function IndexPage(props) {
       init: function () {
         myDropzone.on("addedfile", function (file) {
           console.log("Added file." + file);
-          setWaitingForDownload(true);
-          StartPollingForDownload(setDownloadLink);
         });
 
         myDropzone.on("sending", function (file, xhr, formData) {
@@ -87,6 +79,11 @@ function IndexPage(props) {
 
         myDropzone.on("success", function (file, resp) {
           console.log("success" + resp);
+          setWaitingForDownload(true);
+
+          var fileUrl = "http://brorender:brocorpbrocorpbrocorp@15.207.161.3/zips/" + resp[0] + ".zip";
+          setDownloadLink(fileUrl);
+          StartPollingForDownload(fileUrl, setWaitingForDownload);
           // set unique siteId here
         });
       },
@@ -95,9 +92,6 @@ function IndexPage(props) {
     myDropzone.options.blendDropzone.init();
   }, []);
 
-  // The recommended way from within the init configuration:
-
-  console.log("rendering the boy once")
   return (
     <>
       <NavbarCustom
@@ -108,26 +102,29 @@ function IndexPage(props) {
       />
       <div
         style={{
-          border: "5px grey dashed",
-          borderRadius: "10px",
           marginLeft: "auto",
           marginRight: "auto",
           marginTop: "2em",
-          width: "80vw",
           backgroundImage: "url(img/dragdrop-header.gif)",
           backgroundSize: "80%",
           backgroundPosition: "center",
-          minHeight: "75vh",
         }}
       >
-        <form id="blendDropzone">
+        <form id="blendDropzone"
+        style={{
+          border: "5px grey dashed",
+          borderRadius: "10px",
+          minHeight: "75vh",
+          width: "80vw",
+          padding: "20px",
+        }}>
           <HeroSection
             bg="white"
             textColor="dark"
             size="md"
             bgImage=""
             bgImageOpacity={1}
-            title={isWaitingForDownload == true ?"" : "Upload a .blend file to begin"}
+            title={(downloadLink != "") ? "" : "Upload a .blend file to begin"}
             // subtitle="Upload a .blend file to begin"
             buttonText="Get Started"
             buttonColor="primary"
@@ -136,7 +133,11 @@ function IndexPage(props) {
               myDropzone.hiddenFileInput.click();
             }}
           />
-          {isWaitingForDownload == true && <div style={{textAlign:"center"}}>{downloadLink == "" ? "Your download will appear here when ready." : downloadLink}</div>}
+          {(downloadLink != "") && 
+            <div style={{textAlign:"center"}}>
+              {isWaitingForDownload == true ? "Your download will appear here when ready." : downloadLink}
+            </div>
+          }
         </form>
       </div>
 
