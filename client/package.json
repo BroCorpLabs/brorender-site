@@ -27,7 +27,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "deploy": "react-scripts build && rm -r ../docs && mkdir ../docs && cp -R ./build/* ./../docs/ && cp ./../CNAME ./../docs/",
+    "deploy": "react-scripts build && scp -r build/* pranithhengavalli@35.239.38.67:/var/www/html",
+    "deploy_old": "react-scripts build && rm -r ../docs && mkdir ../docs && cp -R ./build/* ./../docs/ && cp ./../CNAME ./../docs/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
