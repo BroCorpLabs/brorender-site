@@ -81,7 +81,7 @@ function IndexPage(props) {
           console.log("success" + resp);
           setWaitingForDownload(true);
 
-          var fileUrl = "http://brorender:brocorpbrocorpbrocorp@15.207.161.3/zips/" + resp[0] + ".zip";
+          var fileUrl = "https://brorender:brocorpbrocorpbrocorp@brorender.site/zips/" + resp[0] + ".zip";
           setDownloadLink(fileUrl);
           StartPollingForDownload(fileUrl, setWaitingForDownload);
           // set unique siteId here
