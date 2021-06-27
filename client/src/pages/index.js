@@ -28,28 +28,31 @@ function CreateBCid(cookies) {
 }
 
 function StartPollingForDownload(urlToPoll, setWaitingForDownload){
-  setTimeout(() => {
     httpGetAsync(urlToPoll, (response)=> {
-      if(response)
+      if(response == false)
       {
+        // case: zip is not present, poll again
+        setTimeout(() => {
+          StartPollingForDownload(urlToPoll, setWaitingForDownload);
+        }, 10000); // 10 second gap between polls, async
+      } else {
         // case: done polling for zip and its present
         setWaitingForDownload(false);
-      } else {
-        // case: zip is not present, poll again
-        StartPollingForDownload(urlToPoll, setWaitingForDownload);
       }
     });
-  }, 10000); // 10 second gap between polls, async
 }
 
 async function httpGetAsync(theUrl, callback)
 {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4) //  && xmlHttp.status == 200)
+        if (xmlHttp.readyState == 4 && xmlHttp.status != 404){
             callback(xmlHttp.responseText);
+        } else {
+          callback(false);
+        }
     }
-    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.open("GET", theUrl, false); // true for asynchronous 
     xmlHttp.send(null);
 }
 
@@ -81,7 +84,7 @@ function IndexPage(props) {
           console.log("success" + resp);
           setWaitingForDownload(true);
 
-          var fileUrl = "https://brorender:brocorpbrocorpbrocorp@brorender.site/zips/" + resp[0] + ".zip";
+          var fileUrl = "https://brorender:brocorpbrocorpbrocorp@brorender.site/zips/" + JSON.parse(resp)[0] + ".zip";
           setDownloadLink(fileUrl);
           StartPollingForDownload(fileUrl, setWaitingForDownload);
           // set unique siteId here
