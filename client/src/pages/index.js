@@ -32,9 +32,9 @@ function StartPollingForDownload(urlToPoll, setWaitingForDownload){
       if(response == false)
       {
         // case: zip is not present, poll again
-        setTimeout(() => {
-          StartPollingForDownload(urlToPoll, setWaitingForDownload);
-        }, 10000); // 10 second gap between polls, async
+        // setTimeout(() => {
+        //   StartPollingForDownload(urlToPoll, setWaitingForDownload);
+        // }, 10000); // 10 second gap between polls, async
       } else {
         // case: done polling for zip and its present
         setWaitingForDownload(false);
@@ -49,6 +49,7 @@ async function httpGetAsync(theUrl, callback)
         if (xmlHttp.readyState == 4 && xmlHttp.status != 404){
             callback(xmlHttp.responseText);
         } else {
+          console.log("failed, status: " + xmlHttp.status);
           callback(false);
         }
     }
