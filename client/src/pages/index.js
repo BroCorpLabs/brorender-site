@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { v4 as uuidv4 } from "uuid";
 
@@ -27,8 +27,42 @@ function CreateBCid(cookies) {
   return newBCid;
 }
 
+function StartPollingForDownload(setDownloadLink){
+  setTimeout(() => {
+
+    // make get request
+    // check if file exists
+    // if exists set
+    // else retry
+    httpGetAsync("http://www.reddit.com", (response)=> {
+      if(response)
+      {
+        console.log("response looks like: " + response);
+        var i = "$DYNAMICURLHERE$" // probably need to reuse the video url we polled here
+        setDownloadLink("http://brorender:brocorpbrocorpbrocorp@15.207.161.3/zips/"+i+".zip");
+      } else {
+        StartPollingForDownload(setDownloadLink);
+      }
+    });
+    
+  }, 2000);
+}
+
+async function httpGetAsync(theUrl, callback)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4) //  && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.send(null);
+}
+
 function IndexPage(props) {
   var myDropzone;
+  var [isWaitingForDownload, setWaitingForDownload] = useState(false);
+  var [downloadLink, setDownloadLink] = useState("");
 
   useEffect(() => {
     var Dropzone = window.Dropzone;
@@ -43,6 +77,8 @@ function IndexPage(props) {
       init: function () {
         myDropzone.on("addedfile", function (file) {
           console.log("Added file." + file);
+          setWaitingForDownload(true);
+          StartPollingForDownload(setDownloadLink);
         });
 
         myDropzone.on("sending", function (file, xhr, formData) {
@@ -61,6 +97,7 @@ function IndexPage(props) {
 
   // The recommended way from within the init configuration:
 
+  console.log("rendering the boy once")
   return (
     <>
       <NavbarCustom
@@ -90,7 +127,7 @@ function IndexPage(props) {
             size="md"
             bgImage=""
             bgImageOpacity={1}
-            title="Upload a .blend file to begin"
+            title={isWaitingForDownload == true ?"" : "Upload a .blend file to begin"}
             // subtitle="Upload a .blend file to begin"
             buttonText="Get Started"
             buttonColor="primary"
@@ -99,6 +136,7 @@ function IndexPage(props) {
               myDropzone.hiddenFileInput.click();
             }}
           />
+          {isWaitingForDownload == true && <div style={{textAlign:"center"}}>{downloadLink == "" ? "Your download will appear here when ready." : downloadLink}</div>}
         </form>
       </div>
 
