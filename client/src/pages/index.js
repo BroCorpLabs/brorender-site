@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Cookies from "universal-cookie";
 import { v4 as uuidv4 } from "uuid";
 
@@ -27,40 +27,12 @@ function CreateBCid(cookies) {
   return newBCid;
 }
 
-function StartPollingForDownload(urlToPoll, setWaitingForDownload){
-    httpGetAsync(urlToPoll, (response)=> {
-      if(response == false)
-      {
-        // case: zip is not present, poll again
-        // setTimeout(() => {
-        //   StartPollingForDownload(urlToPoll, setWaitingForDownload);
-        // }, 10000); // 10 second gap between polls, async
-      } else {
-        // case: done polling for zip and its present
-        setWaitingForDownload(false);
-      }
-    });
-}
-
-async function httpGetAsync(theUrl, callback)
-{
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status != 404){
-            callback(xmlHttp.responseText);
-        } else {
-          console.log("failed, status: " + xmlHttp.status);
-          callback(false);
-        }
-    }
-    xmlHttp.open("GET", theUrl, false); // true for asynchronous 
-    xmlHttp.send(null);
-}
-
 function IndexPage(props) {
   var myDropzone;
   var [isWaitingForDownload, setWaitingForDownload] = useState(false);
   var [downloadLink, setDownloadLink] = useState("");
+  var [userDownloadLink, setUserDownloadLink] = useState("");
+  var [userDownloadFilename, setUserDownloadFilename] = useState("");
 
   useEffect(() => {
     var Dropzone = window.Dropzone;
@@ -85,9 +57,45 @@ function IndexPage(props) {
           console.log("success" + resp);
           setWaitingForDownload(true);
 
-          var fileUrl = "https://brorender:brocorpbrocorpbrocorp@brorender.site/zips/" + JSON.parse(resp)[0] + ".zip";
+          var headers = new Headers();
+
+          headers.append(
+            "Authorization",
+            "Basic " + btoa("brorender" + ":" + "brocorpbrocorpbrocorp")
+          );
+
+          var fileUrl =
+            "https://brorender.site/zips/" + JSON.parse(resp)[0] + ".zip";
+          setUserDownloadLink(
+            "https://brorender:brocorpbrocorpbrocorp@brorender.site/zips/" +
+              JSON.parse(resp)[0] +
+              ".zip"
+          );
+          setUserDownloadFilename(JSON.parse(resp)[0] + ".zip");
+
+          const loadZipFromServer = async (fileUrl) => {
+            let response = await fetch(fileUrl, {
+              headers: headers,
+              credentials: "same-origin",
+            });
+            console.log(response.status);
+            if (response.status === 404) {
+              console.log(response);
+              setTimeout(() => {
+                loadZipFromServer(fileUrl);
+              }, 2000);
+            } else if (response.status == 200) {
+              console.log("Success!");
+              setWaitingForDownload(false);
+              setDownloadLink(fileUrl);
+              console.log(response);
+            }
+          };
+
+          setWaitingForDownload(true);
           setDownloadLink(fileUrl);
-          StartPollingForDownload(fileUrl, setWaitingForDownload);
+          loadZipFromServer(fileUrl);
+
           // set unique siteId here
         });
       },
@@ -114,21 +122,23 @@ function IndexPage(props) {
           backgroundPosition: "center",
         }}
       >
-        <form id="blendDropzone"
-        style={{
-          border: "5px grey dashed",
-          borderRadius: "10px",
-          minHeight: "75vh",
-          width: "80vw",
-          padding: "20px",
-        }}>
+        <form
+          id="blendDropzone"
+          style={{
+            border: "5px grey dashed",
+            borderRadius: "10px",
+            minHeight: "75vh",
+            width: "80vw",
+            padding: "20px",
+          }}
+        >
           <HeroSection
             bg="white"
             textColor="dark"
             size="md"
             bgImage=""
             bgImageOpacity={1}
-            title={(downloadLink != "") ? "" : "Upload a .blend file to begin"}
+            title={downloadLink != "" ? "" : "Upload a .blend file to begin"}
             // subtitle="Upload a .blend file to begin"
             buttonText="Get Started"
             buttonColor="primary"
@@ -137,11 +147,17 @@ function IndexPage(props) {
               myDropzone.hiddenFileInput.click();
             }}
           />
-          {(downloadLink != "") && 
-            <div style={{textAlign:"center"}}>
-              {isWaitingForDownload == true ? "Your download will appear here when ready." : downloadLink}
+          {downloadLink != "" && (
+            <div style={{ textAlign: "center" }}>
+              {isWaitingForDownload == true ? (
+                "Your download will appear here when ready."
+              ) : (
+                <a href={userDownloadLink} download={userDownloadFilename}>
+                  <button type="button">Download</button>
+                </a>
+              )}
             </div>
-          }
+          )}
         </form>
       </div>
 
