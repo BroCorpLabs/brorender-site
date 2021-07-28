@@ -1,6 +1,12 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useReducer } from "react";
 import Cookies from "universal-cookie";
 import { v4 as uuidv4 } from "uuid";
+import {
+  initiateSocket,
+  disconnectSocket,
+  subscribeToJob,
+} from "../util/socket.js";
+import { jobReducer } from "../util/reducer.js";
 
 import NavbarCustom from "./../components/NavbarCustom";
 import HeroSection from "./../components/HeroSection";
@@ -34,6 +40,27 @@ function IndexPage(props) {
   var [userDownloadLink, setUserDownloadLink] = useState("");
   var [userDownloadFilename, setUserDownloadFilename] = useState("");
 
+  const [jobs, setJobs] = useState([]);
+  const [jobId, setJobId] = useState("");
+  const [jobState, jobDispatch] = useReducer(jobReducer, { jobs: [] });
+
+  useEffect(() => {
+    if (jobId !== "") {
+      initiateSocket(jobId);
+      const jobsList = jobs;
+      jobsList.push(jobId);
+      setJobs(jobsList);
+      console.log(jobs);
+    }
+    subscribeToJob((err, data) => {
+      if (err) return;
+      jobDispatch(data);
+    });
+    return () => {
+      disconnectSocket();
+    };
+  }, [jobId]);
+
   useEffect(() => {
     var Dropzone = window.Dropzone;
     if (Dropzone.instances.length > 0)
@@ -53,11 +80,14 @@ function IndexPage(props) {
           formData.append("BCid", GetBCid());
         });
 
-        myDropzone.on("success", function (file, resp) {
+        myDropzone.on("success", (file, resp) => {
           console.log("success" + resp);
           setWaitingForDownload(true);
 
           var headers = new Headers();
+
+          setJobId(JSON.parse(resp)[0]);
+          // console.log(JSON.parse(resp)[0]);
 
           headers.append(
             "Authorization",
@@ -122,6 +152,13 @@ function IndexPage(props) {
           backgroundPosition: "center",
         }}
       >
+        {/* <button
+          onClick={() => {
+            console.log(jobState);
+          }}
+        >
+          Click
+        </button> */}
         <form
           id="blendDropzone"
           style={{
@@ -138,7 +175,7 @@ function IndexPage(props) {
             size="md"
             bgImage=""
             bgImageOpacity={1}
-            title={downloadLink != "" ? "" : "Upload a .blend file to begin"}
+            title={downloadLink !== "" ? "" : "Upload a .blend file to begin"}
             // subtitle="Upload a .blend file to begin"
             buttonText="Get Started"
             buttonColor="primary"
@@ -147,9 +184,9 @@ function IndexPage(props) {
               myDropzone.hiddenFileInput.click();
             }}
           />
-          {downloadLink != "" && (
+          {downloadLink !== "" && (
             <div style={{ textAlign: "center" }}>
-              {isWaitingForDownload == true ? (
+              {isWaitingForDownload === true ? (
                 "Your download will appear here when ready."
               ) : (
                 <a href={userDownloadLink} download={userDownloadFilename}>
@@ -159,6 +196,37 @@ function IndexPage(props) {
             </div>
           )}
         </form>
+        <br />
+        <br />
+        <br />
+        {jobState["jobs"].map((eachJob) => {
+          return (
+            <div>
+              {eachJob["jobId"]} <br />
+              {eachJob["frames"].map((eachFrame) => {
+                return (
+                  <div>
+                    {eachFrame["frame"]}
+                    <br />
+                    {/* {eachFrame["tiles"].map((eachTile) => {
+                      return (
+                        <div>
+                          <img src={eachTile["image"]} alt="" />
+                        </div>
+                      );
+                    })} */}
+                    <div>
+                      <img
+                        src={mergeImages(mergeSorter(eachFrame["tiles"]))}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
 
       {/* <form action={process.env.RENDER_SERVER_ROUTE}
@@ -190,5 +258,83 @@ function IndexPage(props) {
     </>
   );
 }
+
+// const horizontalMergeImages = (images) => {
+//   const options = {
+//     format: "image/png",
+//     quality: 1.0,
+//     width: 960,
+//     height: 256,
+//   };
+//   const canvas = window.document.createElement("canvas");
+//   const ctx = canvas.getContext("2d");
+
+//   images.forEach((image) => {
+//     const img = new Image();
+//     img.src = image.image;
+//     return ctx.drawImage(img, image.startX || 0, 0);
+//   });
+
+//   // Resolve all other data URIs sync
+//   return canvas.toDataURL(options.format, options.quality);
+// };
+
+// const verticalMergeImages = (images) => {
+//   const options = {
+//     format: "image/png",
+//     quality: 1.0,
+//     width: 960,
+//     height: 540,
+//   };
+//   const canvas = window.document.createElement("canvas");
+//   const ctx = canvas.getContext("2d");
+
+//   const horiontallyMergedImages = horizontalMergeImages(images);
+
+//   // Resolve all other data URIs sync
+//   return canvas.toDataURL(options.format, options.quality);
+// };
+
+const mergeSorter = (images) => {
+  // console.log("presort", images);
+  const postSortImages = [...images].sort((a, b) => {
+    if (a.y === b.y) {
+      return a.y > b.y ? 1 : a.y < b.y ? -1 : 0;
+    }
+
+    return a.y > b.y ? 1 : -1;
+  });
+  // console.log("postsort", postSortImages);
+  return postSortImages;
+};
+
+const mergeImages = (images, mergeOptions) => {
+  const options = {
+    format: "image/png",
+    quality: 1.0,
+    width: 960,
+    height: 540,
+  };
+  const canvas = window.document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  // Set canvas dimensions
+  canvas.width = options.width;
+  canvas.height = options.height;
+
+  // console.log("images", images);
+
+  // Draw images to canvas
+  images.forEach((image) => {
+    const img = new Image();
+    img.src = image.image;
+    console.log(image);
+    return ctx.drawImage(img, image.startX || 0, image.startY || 0);
+  });
+
+  // const fullyMergedImages = verticalMergeImages(images);
+
+  // Resolve all other data URIs sync
+  return canvas.toDataURL(options.format, options.quality);
+};
 
 export default IndexPage;
