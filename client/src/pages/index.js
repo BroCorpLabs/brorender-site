@@ -255,6 +255,7 @@ function IndexPage(props) {
         description="A short description of what you do here"
         copyright="© 2020 Company"
         logo="./img/logo.png"
+        bclogo="./img/brocorp-logo.png"
       />
     </>
   );

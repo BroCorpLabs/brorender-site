@@ -29,7 +29,8 @@ function NavbarCustom(props) {
         <Navbar.Collapse id="navbar-nav" className="justify-content-end">
           <Nav className="mr-1">
             <LinkContainer to="/about">
-              <Nav.Link active={false}>About</Nav.Link>
+              {/* <Nav.Link active={false}>About</Nav.Link> */}
+              <></>
             </LinkContainer>
 
             {/* <LinkContainer to="/pricing">

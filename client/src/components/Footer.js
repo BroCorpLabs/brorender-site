@@ -22,15 +22,28 @@ function Footer(props) {
             </Link>
           </div>
           <div className="links right">
-            <Link to="/about">About</Link>
-            <Link to="/faq">FAQ</Link>
-            <Link to="/contact">Contact</Link>
             <a
               target="_blank"
-              href="https://medium.com"
+              href="https://brocorp.site"
+              rel="noopener noreferrer"
+            >Contact
+            </a>
+            <a
+              target="_blank"
+              href="https://brocorp.site"
               rel="noopener noreferrer"
             >
               Blog
+            </a>
+          </div>
+          <div className="links center" style={{display: "flex", flexDirection: "column", alignItems: 'center', fontSize: 10}}>
+            powered by
+            <a
+              target="_blank"
+              href="https://brocorp.site"
+              rel="noopener noreferrer"
+            >
+              <img src={props.bclogo} style={{width: 170, filter:"invert(1)", marginTop: -10}}/>
             </a>
           </div>
           {/* <div className="social right">
