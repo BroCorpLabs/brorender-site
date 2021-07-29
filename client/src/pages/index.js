@@ -321,6 +321,10 @@ const mergeImages = (images, mergeOptions) => {
   canvas.width = options.width;
   canvas.height = options.height;
 
+  var tileHeight = 256;
+
+  var firstExtraHeight = tileHeight - (options.height % tileHeight);
+
   // console.log("images", images);
 
   // Draw images to canvas
@@ -328,7 +332,12 @@ const mergeImages = (images, mergeOptions) => {
     const img = new Image();
     img.src = image.image;
     console.log(image);
-    return ctx.drawImage(img, image.startX || 0, image.startY || 0);
+
+    var realStartY = options.height - image.startY;
+    return ctx.drawImage(img, image.startX || 0, (
+      (realStartY) -
+      (realStartY > tileHeight ? firstExtraHeight: 0) // move image up if after first row
+      ) || 0);
   });
 
   // const fullyMergedImages = verticalMergeImages(images);
