@@ -48,6 +48,20 @@ $grid-breakpoints: (
   > .footer {
     margin-top: auto;
   }
+
+  div.scroll {
+    margin:4px, 4px;
+    padding:4px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align:justify;
+    scroll-snap-type: y mandatory;
+  }
+
+  div.scrollsnap {
+    scroll-snap-align: start;
+  }
+
   // Prevent child elements from shrinking when content
   // is taller than the screen (quirk of having flex parent)
   > * {

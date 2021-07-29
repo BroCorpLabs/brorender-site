@@ -201,11 +201,12 @@ function IndexPage(props) {
         <br />
         {jobState["jobs"].map((eachJob) => {
           return (
-            <div>
+            // todo get each frame height dynamically.
+            <div className="scroll" style={{height: 540}}> 
               {eachJob["jobId"]} <br />
               {eachJob["frames"].map((eachFrame) => {
                 return (
-                  <div>
+                  <div className="scrollsnap">
                     {eachFrame["frame"]}
                     <br />
                     {/* {eachFrame["tiles"].map((eachTile) => {
