@@ -1,7 +1,7 @@
 import io from "socket.io-client";
 let socket;
 export const initiateSocket = (jobId) => {
-  socket = io("http://brorender.site:8083");
+  socket = io("https://brorender.site");
   console.log(`Connecting socket...`);
   if (socket && jobId) socket.emit("join", jobId);
 };
