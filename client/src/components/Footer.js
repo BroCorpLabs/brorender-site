@@ -26,7 +26,8 @@ function Footer(props) {
               target="_blank"
               href="https://brocorp.site"
               rel="noopener noreferrer"
-            >Contact
+            >
+              Contact
             </a>
             <a
               target="_blank"
@@ -36,15 +37,57 @@ function Footer(props) {
               Blog
             </a>
           </div>
-          <div className="links center" style={{display: "flex", flexDirection: "column", alignItems: 'center', fontSize: 10}}>
-            powered by
-            <a
-              target="_blank"
-              href="https://brocorp.site"
-              rel="noopener noreferrer"
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <div
+              className="links center"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                fontSize: 10,
+              }}
             >
-              <img src={props.bclogo} style={{width: 170, filter:"invert(1)", marginTop: -10}}/>
-            </a>
+              powered by
+              <a
+                target="_blank"
+                href="https://brocorp.site"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={props.bclogo}
+                  style={{ width: 170, filter: "invert(1)", marginTop: -10 }}
+                  alt="brocorp"
+                />
+              </a>
+            </div>
+            <div
+              className="links center"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                fontSize: 10,
+              }}
+            >
+              built with
+              <a
+                target="_blank"
+                href="https://brocorp.site"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={props.pclogo}
+                  style={{ width: 130, marginTop: 10, marginLeft: 20 }}
+                  alt="pachyderm"
+                />
+              </a>
+            </div>
           </div>
           {/* <div className="social right">
             <a

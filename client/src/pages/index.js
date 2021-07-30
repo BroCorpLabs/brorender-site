@@ -152,15 +152,9 @@ function IndexPage(props) {
           backgroundPosition: "center",
         }}
       >
-        {/* <button
-          onClick={() => {
-            console.log(jobState);
-          }}
-        >
-          Click
-        </button> */}
         <form
           id="blendDropzone"
+          className="dropzone dz-clickable"
           style={{
             border: "5px grey dashed",
             borderRadius: "10px",
@@ -202,7 +196,7 @@ function IndexPage(props) {
         {jobState["jobs"].map((eachJob) => {
           return (
             // todo get each frame height dynamically.
-            <div className="scroll" style={{height: 540}}> 
+            <div className="scroll" style={{ height: 540 }}>
               {eachJob["jobId"]} <br />
               {eachJob["frames"].map((eachFrame) => {
                 return (
@@ -256,6 +250,7 @@ function IndexPage(props) {
         copyright="© 2020 Company"
         logo="./img/logo.png"
         bclogo="./img/brocorp-logo.png"
+        pclogo="./img/pachyderm-logo.png"
       />
     </>
   );
@@ -336,10 +331,12 @@ const mergeImages = (images, mergeOptions) => {
     console.log(image);
 
     var realStartY = options.height - image.startY;
-    return ctx.drawImage(img, image.startX || 0, (
-      (realStartY) -
-      (realStartY > tileHeight ? firstExtraHeight: 0) // move image up if after first row
-      ) || 0);
+    return ctx.drawImage(
+      img,
+      image.startX || 0,
+      realStartY - (realStartY > tileHeight ? firstExtraHeight : 0) || // move image up if after first row
+        0
+    );
   });
 
   // const fullyMergedImages = verticalMergeImages(images);
