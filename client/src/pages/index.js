@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback, useReducer } from "react";
 import Cookies from "universal-cookie";
 import { v4 as uuidv4 } from "uuid";
+import CookieConsent from "react-cookie-consent";
+
 import {
   initiateSocket,
   disconnectSocket,
@@ -252,45 +254,19 @@ function IndexPage(props) {
         bclogo="./img/brocorp-logo.png"
         pclogo="./img/pachyderm-logo.png"
       />
+      <CookieConsent
+        style={{ background: "#707070" }}
+        buttonStyle={{
+          color: "#ffffff",
+          fontSize: "13px",
+          backgroundColor: "#000000",
+        }}
+      >
+        This website uses cookies to enhance the user experience.
+      </CookieConsent>
     </>
   );
 }
-
-// const horizontalMergeImages = (images) => {
-//   const options = {
-//     format: "image/png",
-//     quality: 1.0,
-//     width: 960,
-//     height: 256,
-//   };
-//   const canvas = window.document.createElement("canvas");
-//   const ctx = canvas.getContext("2d");
-
-//   images.forEach((image) => {
-//     const img = new Image();
-//     img.src = image.image;
-//     return ctx.drawImage(img, image.startX || 0, 0);
-//   });
-
-//   // Resolve all other data URIs sync
-//   return canvas.toDataURL(options.format, options.quality);
-// };
-
-// const verticalMergeImages = (images) => {
-//   const options = {
-//     format: "image/png",
-//     quality: 1.0,
-//     width: 960,
-//     height: 540,
-//   };
-//   const canvas = window.document.createElement("canvas");
-//   const ctx = canvas.getContext("2d");
-
-//   const horiontallyMergedImages = horizontalMergeImages(images);
-
-//   // Resolve all other data URIs sync
-//   return canvas.toDataURL(options.format, options.quality);
-// };
 
 const mergeSorter = (images) => {
   // console.log("presort", images);
@@ -301,7 +277,6 @@ const mergeSorter = (images) => {
 
     return a.y > b.y ? 1 : -1;
   });
-  // console.log("postsort", postSortImages);
   return postSortImages;
 };
 

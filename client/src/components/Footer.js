@@ -36,6 +36,7 @@ function Footer(props) {
             >
               Blog
             </a>
+            <Link to="/privacy">Privacy</Link>
           </div>
           <div
             style={{
@@ -89,36 +90,6 @@ function Footer(props) {
               </a>
             </div>
           </div>
-          {/* <div className="social right">
-            <a
-              href="https://twitter.com/divjoy"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="icon">
-                <i className="fab fa-twitter" />
-              </span>
-            </a>
-            <a
-              href="https://facebook.com/DivjoyOfficial"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="icon">
-                <i className="fab fa-facebook-f" />
-              </span>
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="icon">
-                <i className="fab fa-instagram" />
-              </span>
-            </a>
-          </div>
-          <div className="copyright left">{props.copyright}</div> */}
         </div>
       </Container>
     </Section>
